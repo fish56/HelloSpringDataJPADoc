@@ -1,10 +1,6 @@
 ## 创建表
 
-学习Spring Boot Data，首先要能够正确的创建数据库中的表。
-
-
-
-注解有两种，一种是控制SQL语句的，一种是写给JPA看的。
+学习Spring Data JPA，首先要能够正确的通过实体对象在创建数据库中创建相应的表。
 
 
 
@@ -18,7 +14,7 @@ create table monkey(
 );
 ```
 
-上面的是非常常见的SQL语句，我们创建出了一个表。
+上面的是非常常见的SQL语句，我们创建出了一个monkey表。
 
 那么，这种情况我们如何写我们的Entity，如何通过JPA来创建我们的表？
 
@@ -30,9 +26,9 @@ create table monkey(
 
   有的时候我们希望自定义表和列的名称，比如Java中一个是驼峰式的命名风格，而SQL中则一般使用
 
-  下划线风格。所以我们可以通过上面两个注解来做出映射。
+  下划线风格。所以我们可以通过上面两个注解来做出映射，通过name属性来明确生成的表的名称。
 
-  不过Spring Data JPA会自动的把驼峰风格转化为下划线风格，所以上面两个写法其实没有发挥作用，我写出来主要是告诉大家可以这样做
+  不过Spring Data JPA会自动的把驼峰风格转化为下划线风格，所以上面两个写法其实可以省略，我写出来主要是告诉大家可以这样做
 
 - `@Column(columnDefinition = "int(10)")`
 
@@ -40,11 +36,11 @@ create table monkey(
 
 - `@GeneratedValue(strategy=GenerationType.IDENTITY)`
 
-  这个注解对应数据库的自动增长类型
+  这个注解对应数据库的`auto_increment`类型
 
 - `@Column(unique = true, nullable = false, length = 20)`
 
-  对应null,
+  对应数据库中的not null, unique。
 
 ![Screen Shot 2019-03-24 at 6.42.23 PM](assets/Screen Shot 2019-03-24 at 6.42.23 PM.png)
 
@@ -54,5 +50,5 @@ create table monkey(
 
 ### 总结下
 
-我们给一个类注解为`@Entity`后，Spring Data JPA就会采取合适的策略为我么建立合适的表结构，这就是魅力所在。
+我们给一个类注解为`@Entity`后，Spring Data JPA就会采取合适的策略为我么建立合适的表结构。
 

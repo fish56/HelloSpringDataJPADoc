@@ -4,8 +4,8 @@
 
 优雅的查询数据是JPA的核心内容，我们想在Spring Boot中使用JPA查询数据只要做到：
 
-- 创建一个继承自Repository 的接口
-- 通过`@Autowired`自动注入
+- 创建一个继承自`Repository` 的接口，Spring Data JPA 能智能的帮我们生成对应的SQL语句
+- 通过`@Autowired`自动注入，Spring Data JPA就会帮我们自动创建实现上面接口的实例
 
 我们先看代码，再解释。
 
@@ -23,12 +23,14 @@
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MonkeyRepoTest {
+    // 自动注入
     @Autowired
     private MonkeyRepo monkeyRepo;
 
     @Test
     public void save(){
         Monkey monkey = new Monkey("Jack");
+        // 直接使用
         monkeyRepo.save(monkey);
     }
 }
@@ -57,6 +59,16 @@ public interface MonkeyRepo extends CrudRepository<Monkey, Long> {
 
 可能有同学会问了，实现方法呢? 为什么只有接口声明没有具体实现呢？ 其实上面的几种方法都是属于基本的操作，没什么技术含量的。Spring Data JPA在运行时可以自动的帮我们生成相应的SQL语句，做出相应的处理。
 
+想想我们在数据库中是不是经常写这些代码`
+
+``` sql
+select count(*) from monkey;
+select * from monkey where id = 2;
+...
+```
+
+JPA只是把这些常用的操作用Java语言描述了。
+
 
 
 我们如果想使用的话，只需要使用`@Autowired`来注解我们的属性，Spring Data JPA 就能自动的帮我注入相应的实例，这个实例会自动实现`CrudRepository<Monkey, Long>`这个接口的所有方法。
@@ -69,7 +81,7 @@ public interface MonkeyRepo extends CrudRepository<Monkey, Long> {
 
 在操作之前请做这两件事
 
-- 因为这个我们要想数据库中存入数据，所以记得把application.yml 中的`spring.jpa.hibernate.ddl-auto`的值修改为`update`
+- 因为这里我们要想在数据库中存入数据，所以记得把application.yml 中的`spring.jpa.hibernate.ddl-auto`的值修改为`update`
 
 ![Screen Shot 2019-03-24 at 9.04.07 PM](assets/Screen Shot 2019-03-24 at 9.04.07 PM.png)
 
@@ -113,4 +125,3 @@ public interface MonkeyRepo extends CrudRepository<Monkey, Long> {
         this.birthDay = birthDay;
     }
 ```
-
